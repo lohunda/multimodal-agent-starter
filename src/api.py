@@ -12,6 +12,7 @@ from steamship.agents.utils import with_llm
 from steamship.invocable import post
 from steamship.invocable.mixins.indexer_pipeline_mixin import IndexerPipelineMixin
 from steamship.utils.repl import AgentREPL
+from steamship.agents.tools.image_generation import DalleTool
 
 from example_tools.vector_search_qa_tool import VectorSearchQATool
 
@@ -84,7 +85,15 @@ class ExampleDocumentQAService(AgentService):
                         "The input is the question. "
                         "The output is the answer. "
                     )
-                )
+                ),
+                DalleTool(
+                    ai_description=(
+                        "Used to generate company logos. "
+                        "Only use if the user has asked for a company logo. "
+                        "The input is a description of what the logo should look like, in detail. "
+                        "The output is the desired logo."
+                ),
+                StableDiffusionTool()
             ],
             llm=OpenAI(self.client),
         )
